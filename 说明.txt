@@ -1,0 +1,22 @@
+1，导入数据库脚本weifenx.sql，配置数据库链接
+2，后台账号密码  admin  567890
+
+商业源码禁止倒卖
+
+清除数据语句
+delete aspnet_Members
+delete Hishop_Orders
+delete Hishop_OrderItems
+delete Hishop_Bargain
+delete Hishop_BargainDetial
+delete Hishop_Commissions
+delete aspnet_Distributors
+delete Hishop_CashBack
+delete Hishop_CashBackDetails
+
+
+delete Hishop_Products
+delete Hishop_ProductTag
+delete Hishop_ProductTypeBrands
+delete Hishop_ProductTypes
+
