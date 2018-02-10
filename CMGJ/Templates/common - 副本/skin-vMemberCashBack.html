@@ -1,0 +1,89 @@
+﻿<hi:common_header runat="server" />
+<script type="text/javascript" src="/script/base.js"></script>
+<link rel="stylesheet" type="text/css" href="/style/dropload.css" />
+<link rel="stylesheet" type="text/css" href="/style/custom.css" />
+<script type="text/javascript" src="/script/dropload.min.js"></script>
+<link rel="stylesheet" href="/style/css.css">
+<script type="text/javascript">
+    $(document).ready(function () {
+        var pageIndex = 1;
+        var pageSize = 10;
+        var totalPage = 0;
+        var dropload = $('.detail_box').dropload({
+            scrollArea: window,
+            loadDownFn: function (me) {
+                $.ajax({
+                    type: "get", async: true,
+                    url: '/api/VshopProcess.ashx?action=GetCashBack',
+                    data: {
+                        "pageIndex": pageIndex,
+                        "pageSize": pageSize
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        totalPage = Math.floor((data.total + pageSize - 1) / pageSize);
+                        //var html = "";
+                        $(data.rows).each(function (i, e) {
+                            var html = "<li class=\"clearfix\">";
+                            html += "<div class=\"tran_list_left\">";
+                            var tradeName = "";
+                            var contextVal = "";
+                            
+                            switch (e.CashBackType) {
+                                case 0:
+                                    {
+                                        tradeName = (e.IsValid ? "有效" : "失效") + " - 现金 - " + (e.IsFinished ? "已完成" : "返现中");
+                                        contextVal = "+" + e.CashBackAmount.toFixed(2);
+                                        break;
+                                    }
+                                case 1:
+                                    {
+                                        tradeName = (e.IsValid ? "有效" : "失效") + " - 积分 - " + (e.IsFinished ? "已完成" : "返现中");
+                                        contextVal = "+" + e.CashBackAmount.toFixed(2);
+                                        break;
+                                    }
+                            }
+
+                            html += "<h2>" + tradeName + "</h2>";
+                            html += "<p>" + e.CreateDate + "</p>";
+
+                            html += "</div>";
+
+                            html += "<div class=\"tran_list_right\">";
+                            html += "<span class=\"subtext\">" + contextVal + "</span>";
+                            html += "<span>" + e.RechargeAmount.toFixed(2) + "</span>";
+                            html += "</div>";
+                            $(".detail_box ul").append(html);
+                        });
+
+
+
+                        if (pageIndex < totalPage) {
+                            pageIndex++;
+                        }
+                        else {
+                            me.lock();
+                            me.noData();
+                        }
+                        me.resetload();
+                    }
+                });
+            }
+        });
+    });
+</script>
+<style>
+    body {
+        max-width: 720px;
+    }
+</style>
+<div class="container">
+    <section class="detail_section">
+        <div class="detail_box">
+            <ul>
+                <li style="display:none;"></li>
+            </ul>
+        </div>
+    </section>
+</div>
+<hi:common_footer runat="server" />
